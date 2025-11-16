@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz I2 Agricultura Sustentable</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+    .app { width: 100%; max-width: 960px; }
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px 24px 28px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+    }
+    h1, h2, h3 { margin-top: 0; }
+    .hidden { display: none; }
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+    .badge {
+      display: inline-block;
+      background: #eef2ff;
+      color: #4f46e5;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+    }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: #4f46e5;
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+    }
+    .btn-primary:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(79, 70, 229, 0.42);
+    }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .btn-secondary:hover {
+      background: #d1d5db;
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: #4b5563;
+    }
+    .btn:active { transform: translateY(0); box-shadow: none; }
+    .hero-actions {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+    .meta span { display: inline-flex; align-items: center; gap: 4px; }
+    .meta svg { width: 14px; height: 14px; }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 8px;
+    }
+    .quiz-header-left { display: flex; flex-direction: column; gap: 4px; }
+    .quiz-progress { font-size: 0.9rem; color: #6b7280; }
+    .quiz-score {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #4f46e5;
+      background: #eef2ff;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .question-section {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #9ca3af;
+      font-weight: 600;
+    }
+    .question-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 8px 0 16px 0;
+    }
+    .question-original {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-bottom: 16px;
+    }
+    .question-image {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      justify-content: flex-start;
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 10px 14px;
+      border: 1px solid transparent;
+    }
+    .option-label {
+      font-weight: 600;
+      margin-right: 6px;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    .option-text { font-size: 0.95rem; }
+    .option-btn:hover {
+      background: #eef2ff;
+      border-color: #e0e7ff;
+    }
+    .option-btn.correct {
+      background: #ecfdf5;
+      border-color: #22c55e;
+      color: #166534;
+    }
+    .option-btn.incorrect {
+      background: #fef2f2;
+      border-color: #f97373;
+      color: #b91c1c;
+    }
+    .option-btn.disabled { pointer-events: none; opacity: 0.9; }
+
+    .feedback {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 0.95rem;
+    }
+    .feedback-title { font-weight: 600; margin-bottom: 4px; }
+    .feedback.correct { color: #166534; }
+    .feedback.incorrect { color: #b91c1c; }
+    .feedback-body { color: #4b5563; margin-top: 4px; }
+
+    .nav-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .pill {
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .open-question-hint {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+    .solution-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-size: 0.9rem;
+    }
+
+    .summary-stat { margin-top: 14px; font-size: 1rem; }
+    .summary-stat strong { font-size: 1.2rem; }
+    .summary-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .summary-item {
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+    }
+    .summary-label { color: #6b7280; margin-bottom: 2px; }
+    .summary-value { font-weight: 600; }
+
+    @media (max-width: 640px) {
+      body { padding: 16px; }
+      .card { padding: 18px 16px 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Inicio -->
+    <div id="start-screen" class="card">
+      <div class="badge">Agricultura sustentable · I2</div>
+      <div class="title">Quiz tipo Kahoot – Cuestionario completo</div>
+      <p class="subtitle">
+        Preguntas de Especies, Protección, Nutrición y Riego, Agricultura Orgánica,
+        Sistemas Intensivos y Cosecha/Postcosecha. Tres alternativas por pregunta.
+      </p>
+      <div class="meta">
+        <span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor"
+              d="M6 4h9a3 3 0 0 1 3 3v11.5a.5.5 0 0 1-.8.4L15 17.5l-2.2 1.4a.5.5 0 0 1-.5 0L10 17.5 7.8 19.3a.5.5 0 0 1-.8-.4V5a1 1 0 0 1 1-1Z" />
+          </svg>
+          <span id="question-count-label"></span>
+        </span>
+        <span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M13 2 4 14h6l-1 8 9-12h-6z" />
+          </svg>
+          Modo secuencial (1 → último)
+        </span>
+      </div>
+
+      <div class="hero-actions">
+        <button class="btn btn-primary" id="btn-start">Comenzar quiz</button>
+        <button class="btn btn-ghost" id="btn-how">¿Cómo añadir más preguntas?</button>
+      </div>
+
+      <div id="how-to" class="hidden" style="margin-top: 14px; font-size: 0.9rem; color:#4b5563;">
+        <strong>Cómo escalar esto:</strong>
+        <ul style="margin-top: 4px; padding-left: 18px;">
+          <li>Edita el array <code>questions</code> en el &lt;script&gt;.</li>
+          <li>Cada pregunta es un objeto con: <code>id</code>, <code>section</code>,
+            <code>originalNumber</code>, <code>text</code>, <code>image</code>,
+            <code>options</code>, <code>correctIndex</code>, <code>explanation</code>.
+          </li>
+          <li>Para usar imágenes, pon la ruta en <code>image</code> (ej: <code>"img/p1.png"</code>).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quiz-screen" class="card hidden">
+      <div class="quiz-header">
+        <div class="quiz-header-left">
+          <div class="question-section" id="question-section"></div>
+          <div class="quiz-progress" id="quiz-progress"></div>
+        </div>
+        <div class="quiz-score" id="quiz-score"></div>
+      </div>
+
+      <div class="question-original" id="question-original"></div>
+      <div class="question-text" id="question-text"></div>
+      <img id="question-image" class="question-image hidden" alt="Imagen de apoyo" />
+
+      <div id="options-container" class="options"></div>
+
+      <div id="open-question-panel" class="hidden">
+        <div class="open-question-hint">
+          Piensa tu respuesta y luego haz clic en <strong>“Mostrar solución”</strong> para comparar.
+        </div>
+        <button class="btn btn-secondary" id="btn-show-solution">Mostrar solución</button>
+        <div id="open-solution-box" class="solution-box hidden"></div>
+      </div>
+
+      <div id="feedback" class="feedback hidden">
+        <div id="feedback-title" class="feedback-title"></div>
+        <div id="feedback-body" class="feedback-body"></div>
+      </div>
+
+      <div class="nav-actions">
+        <span class="pill" id="pill-info"></span>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-secondary" id="btn-prev">Anterior</button>
+          <button class="btn btn-primary" id="btn-next">Siguiente</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen -->
+    <div id="end-screen" class="card hidden">
+      <div class="badge">Resumen</div>
+      <h2>¡Quiz completado! 🎉</h2>
+      <p class="summary-stat">
+        Puntaje: <strong id="final-score"></strong> / <span id="final-total"></span>
+      </p>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-label">Preguntas correctas</div>
+          <div class="summary-value" id="summary-correct"></div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Preguntas respondidas</div>
+          <div class="summary-value" id="summary-answered"></div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">% de acierto</div>
+          <div class="summary-value" id="summary-percent"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-primary" id="btn-restart">Reiniciar</button>
+        <button class="btn btn-ghost" id="btn-back-home">Volver al inicio</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====================================
+    // 1) BANCO DE PREGUNTAS (86 PREGUNTAS)
+    // ====================================
+    //
+    // Para añadir/editar, modifica este array.
+
+    const questions = [
+      // ---- CLASE ESPECIES (1–20) ----
+      {
+        id: 1,
+        section: "Especies",
+        originalNumber: 1,
+        text: "¿Qué es un cultivar o una variedad cultivada? ¿Cuáles son los requisitos para que sea una variedad?",
+        image: null,
+        options: [
+          "Es un grupo de plantas dentro de una especie con características distintivas, heredables, homogéneas y estables en el tiempo.",
+          "Cualquier conjunto de plantas que crecen juntas sin importar sus características.",
+          "Solo una planta individual que luce distinta a las demás, aunque no se pueda mantener en el tiempo."
+        ],
+        correctIndex: 0,
+        explanation: "Un cultivar es una variedad cultivada que debe ser distinta, homogénea y estable (criterios DHE), con caracteres heredables que se mantienen en generaciones sucesivas."
+      },
+      {
+        id: 2,
+        section: "Especies",
+        originalNumber: 2,
+        text: "¿Qué hace que un cultivo sea importante?",
+        image: null,
+        options: [
+          "Su aporte a la alimentación, superficie cultivada, valor económico, relevancia social/cultural y su rol en la seguridad alimentaria.",
+          "Únicamente que tenga alto rendimiento aunque casi no se consuma.",
+          "Solo que sea originario del país donde se cultiva."
+        ],
+        correctIndex: 0,
+        explanation: "La importancia se relaciona con cuánto aporta a la dieta, cuánta superficie ocupa, su valor económico y su relevancia social y cultural."
+      },
+      {
+        id: 3,
+        section: "Especies",
+        originalNumber: 3,
+        text: "¿Cómo fue cambiando la importancia relativa de las especies según lo que consumen las personas?",
+        image: null,
+        options: [
+          "Se pasó de dietas muy diversas y locales a una fuerte concentración en pocos cultivos básicos como trigo, arroz y maíz a nivel global.",
+          "Siempre se han consumido exactamente las mismas especies en las mismas cantidades.",
+          "Se dejaron de consumir cereales casi por completo y se basan solo en frutas tropicales."
+        ],
+        correctIndex: 0,
+        explanation: "Con el tiempo la dieta se fue concentrando en unos pocos cultivos básicos de alto rendimiento, perdiendo parte de la diversidad de especies que se consumían localmente."
+      },
+      {
+        id: 4,
+        section: "Especies",
+        originalNumber: 4,
+        text: "¿Qué alimentos se fueron agregando o sacando de las paletas de alimentación a través del tiempo?",
+        image: null,
+        options: [
+          "Se agregaron azúcares, aceites, productos procesados de origen animal y se redujo el consumo de granos enteros, leguminosas y especies locales.",
+          "Solo se agregaron frutas y verduras y se mantuvo igual todo lo demás.",
+          "Se sacaron todos los cereales y se reemplazaron por carne exclusivamente."
+        ],
+        correctIndex: 0,
+        explanation: "La dieta moderna incorporó más azúcares, aceites y alimentos procesados, reduciendo en muchos casos el consumo de granos integrales, legumbres y cultivos tradicionales."
+      },
+      {
+        id: 5,
+        section: "Especies",
+        originalNumber: 5,
+        text: "¿Qué otras cosas demanda la población hoy en día aparte de que un alimento “alimente”?",
+        image: null,
+        options: [
+          "Que sea sano, inocuo, de buena calidad sensorial, conveniente (tiempo de preparación), y con bajo impacto ambiental y socialmente responsable.",
+          "Solo que sea barato, aunque sea inseguro o de mala calidad.",
+          "Que tenga el mayor empaque posible y mucha publicidad, sin importar su origen."
+        ],
+        correctIndex: 0,
+        explanation: "Además del aporte nutricional, se demanda inocuidad, calidad organoléptica, conveniencia, sustentabilidad ambiental y responsabilidad social."
+      },
+      {
+        id: 6,
+        section: "Especies",
+        originalNumber: 6,
+        text: "¿Qué es un centro de origen?",
+        image: null,
+        options: [
+          "Es la región geográfica donde una especie fue domesticada y donde se concentra su mayor diversidad genética.",
+          "Es cualquier zona donde actualmente se siembra más superficie del cultivo.",
+          "Es el país que más exporta ese cultivo en la actualidad."
+        ],
+        correctIndex: 0,
+        explanation: "Un centro de origen es la región donde se domesticó el cultivo y donde se encuentra una alta diversidad de formas silvestres y cultivadas."
+      },
+      {
+        id: 7,
+        section: "Especies",
+        originalNumber: 7,
+        text: "Ejemplo (al menos 2) de cultivos con centro de origen chino, sudamericano, asiático, Chile y mediterráneo.",
+        image: null,
+        options: [
+          "China: arroz; Sudamérica: papa; Asia: soya; Chile/Chiloé: papa chilota, murtilla; Mediterráneo: trigo, olivo.",
+          "China: trigo; Sudamérica: arroz; Asia: manzana; Chile: cacao; Mediterráneo: soya.",
+          "China: olivo; Sudamérica: arroz; Asia: lechuga; Chile: maíz; Mediterráneo: palta."
+        ],
+        correctIndex: 0,
+        explanation: "Ejemplos correctos: arroz (oriente), papa andina (Sudamérica), soya (Asia oriental), cultivos nativos de Chile/Chiloé como papa chilota y murtilla, y trigo/olivo del Mediterráneo."
+      },
+      {
+        id: 8,
+        section: "Especies",
+        originalNumber: 8,
+        text: "¿Cómo se pueden generar las variedades de plantas? (formas de mejoramiento)",
+        image: null,
+        options: [
+          "Por selección (masal, individual), cruzamientos controlados, mutagénesis y biotecnología (marcadores, transgénicos).",
+          "Solo dejando que las plantas se crucen al azar sin intervenir nunca.",
+          "Únicamente recolectando plantas silvestres sin selección ni cruzamientos."
+        ],
+        correctIndex: 0,
+        explanation: "El mejoramiento utiliza selección, cruzas, mutagénesis y herramientas biotecnológicas para generar nuevas variedades con características deseadas."
+      },
+      {
+        id: 9,
+        section: "Especies",
+        originalNumber: 9,
+        text: "¿Qué cultivos genéticamente modificados se producen y cuáles son sus principales atributos?",
+        image: null,
+        options: [
+          "Principalmente maíz, soya, canola y algodón con tolerancia a herbicidas, resistencia a insectos y a veces tolerancia a virus.",
+          "Solo hortalizas de hoja con colores nuevos y sin cambios en manejo de plagas.",
+          "Únicamente frutales de carozo con mayor tamaño de fruto y sin cambios en manejo."
+        ],
+        correctIndex: 0,
+        explanation: "Los GMO más difundidos son cultivos extensivos como maíz, soya, canola y algodón, con rasgos como tolerancia a herbicidas y resistencia a insectos."
+      },
+      {
+        id: 10,
+        section: "Especies",
+        originalNumber: 10,
+        text: "¿Qué pasa con los organismos genéticamente modificados (GMO) en Chile?",
+        image: null,
+        options: [
+          "Se permiten principalmente para producción de semillas y ensayo bajo regulación estricta, y se importan granos GM para alimentación, pero no se cultivan para consumo directo interno.",
+          "Están completamente prohibidos bajo cualquier forma y no se pueden importar.",
+          "Se cultivan libremente sin regulación ni restricciones en todo el país."
+        ],
+        correctIndex: 0,
+        explanation: "En Chile el uso de GMO está regulado. Se permite la producción de semillas y ensayos, y se importan productos GM, pero el uso está restringido y fiscalizado."
+      },
+      {
+        id: 11,
+        section: "Especies",
+        originalNumber: 11,
+        text: "¿Qué consecuencia puede traer la generación de nuevos cultivos o cultivares modernos?",
+        image: null,
+        options: [
+          "Pérdida de diversidad de variedades tradicionales, dependencia de pocas variedades y posibles cambios en requerimientos de insumos y en la dieta.",
+          "Aumento infinito de la diversidad genética en todos los campos sin riesgos.",
+          "Eliminación automática de plagas y enfermedades sin ningún manejo."
+        ],
+        correctIndex: 0,
+        explanation: "Los cultivares modernos pueden desplazar variedades locales y aumentar la homogeneidad genética, con riesgos para la diversidad y la resiliencia."
+      },
+      {
+        id: 12,
+        section: "Especies",
+        originalNumber: 12,
+        text: "¿Qué es un banco de germoplasma y para qué sirve?",
+        image: null,
+        options: [
+          "Es una colección de semillas o material vegetal que conserva la diversidad genética de especies cultivadas y silvestres para uso futuro en mejoramiento y adaptación.",
+          "Es un banco de dinero dedicado a financiar fertilizantes.",
+          "Es una reserva de plantas adultas listas para cosechar inmediatamente."
+        ],
+        correctIndex: 0,
+        explanation: "Los bancos de germoplasma conservan semillas, tejidos u otros materiales para resguardar la diversidad genética y apoyar la investigación y el mejoramiento."
+      },
+      {
+        id: 13,
+        section: "Especies",
+        originalNumber: 13,
+        text: "Clasificación de los cultivos según su uso: grano (cereales, leguminosas, otros), oleaginosas, raíces, tubérculos, azucareros, fibra, hortícolas.",
+        image: null,
+        options: [
+          "Cereales: trigo, maíz; leguminosas: poroto, lenteja; oleaginosas: raps, maravilla; raíces: zanahoria, betarraga; tubérculos: papa, camote; azucareros: caña, remolacha azucarera; fibra: algodón, lino; hortícolas: lechuga, tomate.",
+          "Cereales: papa, zanahoria; leguminosas: trigo, maíz; oleaginosas: lechuga, tomate; azucareros: poroto, lenteja; fibra: soya, arroz.",
+          "Solo se consideran cereales y hortícolas, el resto no se clasifica según uso."
+        ],
+        correctIndex: 0,
+        explanation: "La clasificación por uso separa cultivos en grupos como cereales, leguminosas, oleaginosas, raíces, tubérculos, azucareros, fibra y hortícolas, con ejemplos típicos en cada uno."
+      },
+      {
+        id: 14,
+        section: "Especies",
+        originalNumber: 14,
+        text: "¿Qué es un cultivo hortícola, cuáles son sus características y cómo se relacionan con dónde se producen en Chile?",
+        image: null,
+        options: [
+          "Son cultivos de hortalizas (verduras) de alto valor, ciclos más cortos y manejo intensivo, que se concentran en zonas con buen acceso a agua, clima favorable y cercanía a mercados.",
+          "Son solo cultivos de secano extensivos de muy bajo valor y sin requerimientos de agua.",
+          "Son cultivos que solo se producen en la alta cordillera por necesidad de heladas intensas."
+        ],
+        correctIndex: 0,
+        explanation: "Las hortalizas se producen en sistemas intensivos, muchas veces cercanos a centros urbanos y en valles con buena disponibilidad de agua y clima templado."
+      },
+      {
+        id: 15,
+        section: "Especies",
+        originalNumber: 15,
+        text: "De los considerados “otros cultivos”, ¿qué tipo de especies suelen incluirse?",
+        image: null,
+        options: [
+          "Cultivos aromáticos, medicinales, especias, flores y otros de nicho que no encajan en las grandes categorías tradicionales.",
+          "Solo cereales de gran escala como trigo y maíz.",
+          "Exclusivamente cultivos forestales de gran tamaño."
+        ],
+        correctIndex: 0,
+        explanation: "La categoría de “otros cultivos” agrupa especies menos masivas como aromáticas, medicinales, especias, flores, etc."
+      },
+      {
+        id: 16,
+        section: "Especies",
+        originalNumber: 16,
+        text: "Explica los diferentes ciclos de cultivo de las especies cultivadas (anuales, bienales, perennes).",
+        image: null,
+        options: [
+          "Anuales: completan su ciclo en una temporada (trigo); bienales: requieren dos temporadas (zanahoria, betarraga); perennes: viven varios años (manzano, alfalfa).",
+          "Anuales: viven muchos años; bienales: viven un mes; perennes: viven solo una temporada.",
+          "Los cultivos no se clasifican por su ciclo de vida."
+        ],
+        correctIndex: 0,
+        explanation: "El ciclo puede ser anual (un año), bienal (dos temporadas para completar semillas) o perenne (planta se mantiene varios años)."
+      },
+      {
+        id: 17,
+        section: "Especies",
+        originalNumber: 17,
+        text: "Saberse al menos 2 especies que sean cultivos de estación cálida y dos especies para estación fría.",
+        image: null,
+        options: [
+          "Estación cálida: maíz, tomate; estación fría: trigo, lechuga.",
+          "Estación cálida: trigo, avena; estación fría: maíz, poroto verde.",
+          "No hay diferencias entre cultivos de estación cálida y fría."
+        ],
+        correctIndex: 0,
+        explanation: "Los cultivos de estación cálida requieren temperaturas más altas (ej. maíz, tomate), mientras que los de estación fría toleran mejor el frío (ej. trigo, lechuga)."
+      },
+      {
+        id: 18,
+        section: "Especies",
+        originalNumber: 18,
+        text: "¿Qué es la rotación de cultivo y para qué sirve?",
+        image: null,
+        options: [
+          "Es la secuencia planificada de diferentes cultivos en el tiempo en un mismo potrero para mejorar suelo, romper ciclos de plagas y usar mejor los nutrientes.",
+          "Es sembrar siempre el mismo cultivo en el mismo lugar sin cambiar nunca.",
+          "Es mover el cultivo físicamente de un campo a otro todos los días."
+        ],
+        correctIndex: 0,
+        explanation: "La rotación ayuda a conservar la fertilidad, reducir plagas y enfermedades y aprovechar mejor los recursos del suelo."
+      },
+      {
+        id: 19,
+        section: "Especies",
+        originalNumber: 19,
+        text: "¿Qué especies son leguminosas y por qué son importantes de incluir en una rotación de cultivos?",
+        image: null,
+        options: [
+          "Porotos, arvejas, lentejas, trébol, alfalfa; fijan nitrógeno atmosférico con rizobios y mejoran la fertilidad del suelo.",
+          "Trigo, maíz y avena, porque no consumen nitrógeno.",
+          "Solo especies forestales, porque fijan fósforo atmosférico."
+        ],
+        correctIndex: 0,
+        explanation: "Las leguminosas forman simbiosis con rizobios y fijan N, dejando parte disponible para cultivos posteriores, por lo que son clave en rotaciones."
+      },
+      {
+        id: 20,
+        section: "Especies",
+        originalNumber: 20,
+        text: "Relaciona la resistencia al frío de los cultivos tropicales, subtropicales y temperados.",
+        image: null,
+        options: [
+          "Tropicales: muy sensibles a heladas; subtropicales: toleran heladas ligeras; temperados: pueden resistir más frío e incluso requieren cierto frío invernal.",
+          "Tropicales: los más resistentes a heladas; subtropicales: no sufren daño con nieve; temperados: mueren con 10 °C.",
+          "No existe relación entre origen climático y resistencia al frío."
+        ],
+        correctIndex: 0,
+        explanation: "Las especies de climas templados soportan mejor el frío; las tropicales son muy sensibles a bajas temperaturas."
+      },
+
+      // ---- PROTECCIÓN DE CULTIVOS (21–32) ----
+      {
+        id: 21,
+        section: "Protección de cultivos",
+        originalNumber: 1,
+        text: "¿Cómo ha cambiado el enfoque en la protección de plantas a través de la historia?",
+        image: null,
+        options: [
+          "De un uso intensivo de plaguicidas de amplio espectro hacia el Manejo Integrado de Plagas (MIP) y Buenas Prácticas Agrícolas.",
+          "De un uso exclusivo de control biológico a uno exclusivo de control químico sin límites.",
+          "No ha cambiado: siempre se han usado las mismas prácticas sin variación."
+        ],
+        correctIndex: 0,
+        explanation: "Actualmente se priorizan estrategias integradas que combinan monitoreo, umbrales, control cultural, biológico y químico selectivo."
+      },
+      {
+        id: 22,
+        section: "Protección de cultivos",
+        originalNumber: 2,
+        text: "¿Qué agentes bióticos afectan las plantas?",
+        image: null,
+        options: [
+          "Invertebrados (insectos, ácaros, nematodos), patógenos (hongos, bacterias, virus) y malezas.",
+          "Solo mamíferos y aves grandes.",
+          "Únicamente hongos y ningún otro organismo."
+        ],
+        correctIndex: 0,
+        explanation: "Los principales agentes bióticos son plagas animales, fitopatógenos y malezas que compiten con el cultivo."
+      },
+      {
+        id: 23,
+        section: "Protección de cultivos",
+        originalNumber: 3,
+        text: "¿Qué porcentaje de pérdida pueden generar los agentes bióticos en un cultivo?",
+        image: null,
+        options: [
+          "Alrededor de un 30–40% de la producción potencial si no se controlan adecuadamente.",
+          "Never más de un 1% de la producción.",
+          "Siempre destruyen el 100% de la producción sin excepción."
+        ],
+        correctIndex: 0,
+        explanation: "A nivel global, se estima que las pérdidas por plagas, enfermedades y malezas pueden alcanzar alrededor de un tercio de la producción."
+      },
+      {
+        id: 24,
+        section: "Protección de cultivos",
+        originalNumber: 4,
+        text: "¿Qué fitopatógenos pueden afectar las plantas y qué se necesita para que ocurra una enfermedad?",
+        image: null,
+        options: [
+          "Hongos, bacterias, virus, nematodos; se requiere un hospedero susceptible, un patógeno virulento y un ambiente favorable (triángulo de la enfermedad).",
+          "Solo virus; basta con que haya lluvia para que siempre haya enfermedad.",
+          "Únicamente bacterias; no se necesitan condiciones ambientales especiales."
+        ],
+        correctIndex: 0,
+        explanation: "El triángulo de la enfermedad indica que se requiere la interacción de hospedero susceptible, patógeno y ambiente favorable."
+      },
+      {
+        id: 25,
+        section: "Protección de cultivos",
+        originalNumber: 5,
+        text: "Ejemplos de síntomas y ejemplos de signos en enfermedades de plantas.",
+        image: null,
+        options: [
+          "Síntomas: clorosis, marchitez, manchas; signos: micelio visible, esporas, cuerpos fructíferos de hongos.",
+          "Síntomas: presencia de esporas; signos: amarillamiento de hojas.",
+          "Síntomas y signos son exactamente lo mismo y no se distinguen."
+        ],
+        correctIndex: 0,
+        explanation: "Los síntomas son las respuestas de la planta (manchas, deformaciones); los signos son estructuras visibles del patógeno."
+      },
+      {
+        id: 26,
+        section: "Protección de cultivos",
+        originalNumber: 6,
+        text: "¿Qué es una maleza, cómo afecta a los cultivos y cómo se clasifica según su ciclo de vida?",
+        image: null,
+        options: [
+          "Es una planta que crece donde no es deseada, compite por recursos y se clasifica en anual, bienal o perenne; suele controlarse en su periodo crítico de interferencia.",
+          "Es cualquier planta que da flores bonitas y no compite por nada.",
+          "Solo son plantas perennes que nunca compiten con el cultivo."
+        ],
+        correctIndex: 0,
+        explanation: "Las malezas compiten por agua, luz y nutrientes; su ciclo de vida determina estrategias de manejo y momentos críticos de control."
+      },
+      {
+        id: 27,
+        section: "Protección de cultivos",
+        originalNumber: 7,
+        text: "¿En qué partes de la planta o del ciclo de la planta pueden afectar los insectos y ácaros?",
+        image: null,
+        options: [
+          "En raíces, tallos, hojas, flores, frutos y también en productos almacenados, en cualquier etapa del ciclo del cultivo.",
+          "Solo pueden atacar las raíces y nunca la parte aérea.",
+          "Solo atacan frutos en postcosecha y nada más."
+        ],
+        correctIndex: 0,
+        explanation: "Los insectos y ácaros pueden alimentarse de distintos órganos y etapas de desarrollo, afectando rendimiento y calidad."
+      },
+      {
+        id: 28,
+        section: "Protección de cultivos",
+        originalNumber: 8,
+        text: "¿Qué preguntas son importantes frente al ataque de un insecto o ácaro?",
+        image: null,
+        options: [
+          "¿Qué especie es?, ¿qué daño causa?, ¿en qué estado del cultivo?, ¿qué densidad tiene?, ¿cuál es el umbral de daño económico y las opciones de manejo disponibles?",
+          "Solo preguntar si es bonito o feo.",
+          "Únicamente si se puede matar con cualquier insecticida sin más información."
+        ],
+        correctIndex: 0,
+        explanation: "Identificar la plaga, su ciclo, daño potencial y densidad es clave para decidir si y cómo intervenir."
+      },
+      {
+        id: 29,
+        section: "Protección de cultivos",
+        originalNumber: 9,
+        text: "¿A qué se refiere el umbral de daño económico y qué importancia tiene en la toma de decisión de control?",
+        image: null,
+        options: [
+          "Es el nivel de población de la plaga en el que el costo del daño iguala o supera el costo de control y se usa para decidir cuándo aplicar medidas.",
+          "Es el número de insectos que cabe en una trampa sin importancia económica.",
+          "Es el valor máximo de producción que puede tener un cultivo."
+        ],
+        correctIndex: 0,
+        explanation: "El umbral de daño económico ayuda a evitar controles innecesarios y a intervenir cuando realmente es rentable hacerlo."
+      },
+      {
+        id: 30,
+        section: "Protección de cultivos",
+        originalNumber: 10,
+        text: "¿Qué daños pueden causar los insectos en las plantas?",
+        image: null,
+        options: [
+          "Defoliación, succión de savia, perforaciones, galerías, deformaciones y transmisión de enfermedades.",
+          "Solo aportan nutrientes y no generan daño alguno.",
+          "Únicamente mejoran la aireación del suelo sin efectos sobre las plantas."
+        ],
+        correctIndex: 0,
+        explanation: "Los insectos pueden dañar hojas, tallos, raíces y frutos, y ser vectores de patógenos."
+      },
+      {
+        id: 31,
+        section: "Protección de cultivos",
+        originalNumber: 11,
+        text: "¿Qué desafíos enfrenta la protección de cultivos a través del tiempo? Usa el ejemplo del arroz.",
+        image: null,
+        options: [
+          "Resistencia de plagas y patógenos, cambios en clima, aparición de nuevas razas, restricciones a plaguicidas; en arroz, por ejemplo, evolución de enfermedades y malezas resistentes.",
+          "No existen desafíos, siempre funcionan los mismos productos.",
+          "Los desafíos solo tienen que ver con la falta de agua potable para los agricultores."
+        ],
+        correctIndex: 0,
+        explanation: "Las plagas y patógenos se adaptan, el clima cambia y las regulaciones se vuelven más estrictas, lo que exige estrategias de manejo más complejas."
+      },
+      {
+        id: 32,
+        section: "Protección de cultivos",
+        originalNumber: 12,
+        text: "¿Cómo se puede manejar de manera sostenible insectos, ácaros, enfermedades y malezas?",
+        image: null,
+        options: [
+          "Mediante un manejo integrado: prevención (rotaciones, variedades resistentes), monitoreo, uso de umbrales, control cultural, biológico, mecánico y químico selectivo y evaluación de resultados.",
+          "Solo aplicando plaguicidas de amplio espectro a dosis máximas.",
+          "Eliminando todos los enemigos naturales del sistema."
+        ],
+        correctIndex: 0,
+        explanation: "El manejo sostenible combina varias tácticas y se basa en información, prevención y uso racional de insumos."
+      },
+
+      // ---- NUTRICIÓN Y RIEGO (33–54) ----
+      {
+        id: 33,
+        section: "Nutrición y riego",
+        originalNumber: 1,
+        text: "¿Para qué funciones las plantas necesitan nutrientes?",
+        image: null,
+        options: [
+          "Para funciones estructurales, metabólicas, energéticas y de regulación como crecimiento, fotosíntesis y formación de tejidos.",
+          "Solo para cambiar de color en otoño.",
+          "Únicamente para producir flores decorativas sin relación con el crecimiento."
+        ],
+        correctIndex: 0,
+        explanation: "Los nutrientes participan en la formación de estructuras, enzimas, pigmentos y en procesos como fotosíntesis y respiración."
+      },
+      {
+        id: 34,
+        section: "Nutrición y riego",
+        originalNumber: 2,
+        text: "¿Cuáles son los macronutrientes y cuáles son los micronutrientes?",
+        image: null,
+        options: [
+          "Macronutrientes: N, P, K, Ca, Mg, S; micronutrientes: Fe, Mn, Zn, Cu, B, Mo, Cl, Ni.",
+          "Macronutrientes: Fe, Zn, Cu; micronutrientes: N, P, K.",
+          "Solo existen macronutrientes, no hay micronutrientes."
+        ],
+        correctIndex: 0,
+        explanation: "Los macronutrientes se requieren en mayor cantidad y los micronutrientes en menores, pero todos son esenciales."
+      },
+      {
+        id: 35,
+        section: "Nutrición y riego",
+        originalNumber: 3,
+        text: "¿Cuáles son los macronutrientes primarios y para qué sirven en las plantas?",
+        image: null,
+        options: [
+          "N, P y K; el nitrógeno en crecimiento vegetativo, el fósforo en energía y raíces, el potasio en equilibrio hídrico y calidad.",
+          "Ca, Mg y S; todos solo sirven para dar sabor.",
+          "Na, Cl y Al; actúan como macronutrientes principales."
+        ],
+        correctIndex: 0,
+        explanation: "N, P y K son los principales por su alta demanda y su fuerte efecto sobre rendimiento y calidad."
+      },
+      {
+        id: 36,
+        section: "Nutrición y riego",
+        originalNumber: 4,
+        text: "¿De qué maneras las plantas pueden absorber nutrientes desde el suelo?",
+        image: null,
+        options: [
+          "Mediante masa de flujo del agua hacia la raíz, difusión en la solución del suelo e intercepción radicular con transporte pasivo y activo a través de las membranas.",
+          "Solo por fotosíntesis aérea sin contacto con el suelo.",
+          "Únicamente por absorción directa desde la atmósfera sin raíces."
+        ],
+        correctIndex: 0,
+        explanation: "El movimiento del agua, la difusión y el crecimiento radicular acercan los nutrientes a las raíces, que los toman por transporte activo y pasivo."
+      },
+      {
+        id: 37,
+        section: "Nutrición y riego",
+        originalNumber: 5,
+        text: "¿Qué es un fertilizante?",
+        image: null,
+        options: [
+          "Es un insumo que aporta nutrientes disponibles para las plantas con el fin de complementar la oferta del suelo.",
+          "Es cualquier sustancia que mata insectos.",
+          "Es solo agua aplicada por riego."
+        ],
+        correctIndex: 0,
+        explanation: "El fertilizante entrega uno o más nutrientes en forma asimilable para la planta."
+      },
+      {
+        id: 38,
+        section: "Nutrición y riego",
+        originalNumber: 6,
+        text: "¿Qué tipos de fertilizantes existen? Explica en qué consisten y da ejemplos.",
+        image: null,
+        options: [
+          "Minerales o químicos (ej. urea, superfosfato), orgánicos (ej. compost, estiércol) y biofertilizantes (microorganismos como rizobios y micorrizas).",
+          "Solo fertilizantes químicos sintéticos; no existen orgánicos.",
+          "Solo fertilizantes orgánicos; los minerales no se consideran fertilizantes."
+        ],
+        correctIndex: 0,
+        explanation: "Se distinguen fertilizantes minerales, orgánicos y biofertilizantes según su origen y forma de acción."
+      },
+      {
+        id: 39,
+        section: "Nutrición y riego",
+        originalNumber: 7,
+        text: "¿Qué son los rizobios y las micorrizas?",
+        image: null,
+        options: [
+          "Rizobios: bacterias que fijan N en simbiosis con leguminosas; micorrizas: hongos que forman asociaciones con raíces y mejoran absorción de agua y nutrientes.",
+          "Rizobios: hongos de hojas; micorrizas: insectos del suelo.",
+          "Son ambos tipos de herbicidas aplicados al suelo."
+        ],
+        correctIndex: 0,
+        explanation: "Rizobios y micorrizas son microbios benéficos clave en la nutrición, especialmente de N y P."
+      },
+      {
+        id: 40,
+        section: "Nutrición y riego",
+        originalNumber: 8,
+        text: "¿Qué consideraciones hay que tener al fertilizar?",
+        image: null,
+        options: [
+          "Dosis, momento, forma de aplicación, tipo de fertilizante, interacción con el suelo y evitar impactos como salinidad, lixiviación y contaminación.",
+          "Fertilizar siempre al azar, sin importar dosis ni momento.",
+          "Solo preocuparse del color del envase del fertilizante."
+        ],
+        correctIndex: 0,
+        explanation: "Una fertilización responsable considera la necesidad real del cultivo, el análisis de suelo y la protección del ambiente."
+      },
+      {
+        id: 41,
+        section: "Nutrición y riego",
+        originalNumber: 9,
+        text: "Explica una curva clásica de respuesta de la planta a los fertilizantes.",
+        image: null,
+        options: [
+          "Muestra rendimiento vs dosis; hay una zona de deficiencia, una de respuesta y un punto óptimo económico, seguido de una meseta y posible toxicidad.",
+          "Es una línea recta donde el rendimiento crece indefinidamente con la dosis.",
+          "Es una curva donde el rendimiento siempre disminuye al aplicar fertilizante."
+        ],
+        correctIndex: 0,
+        explanation: "La respuesta a la dosis suele ser creciente hasta un máximo, tras el cual más fertilizante no aumenta rendimiento e incluso lo reduce."
+      },
+      {
+        id: 42,
+        section: "Nutrición y riego",
+        originalNumber: 10,
+        text: "¿Qué es la ley del mínimo o ley de Liebig?",
+        image: null,
+        options: [
+          "El rendimiento está limitado por el nutriente que está en menor disponibilidad relativa, aunque los demás estén en niveles adecuados.",
+          "El rendimiento depende solamente del nutriente que está en mayor cantidad.",
+          "No tiene relación con los nutrientes, solo con la lluvia."
+        ],
+        correctIndex: 0,
+        explanation: "Se representa con un barril donde la duela más corta (nutriente limitante) determina el nivel máximo de agua (rendimiento)."
+      },
+      {
+        id: 43,
+        section: "Nutrición y riego",
+        originalNumber: 11,
+        text: "¿Cómo se obtiene una dosis de fertilización?",
+        image: null,
+        options: [
+          "A partir de la demanda del cultivo (rendimiento objetivo, extracción), menos la oferta del sistema (suelo, agua, residuos), corrigiendo por la eficiencia del fertilizante.",
+          "Aplicando siempre la misma dosis estándar en todos los suelos.",
+          "Solo mirando el color de las hojas sin ningún cálculo."
+        ],
+        correctIndex: 0,
+        explanation: "Se estima cuánto nutriente requiere el cultivo y cuánto entrega el sistema antes de definir la cantidad que debe aportar el fertilizante."
+      },
+      {
+        id: 44,
+        section: "Nutrición y riego",
+        originalNumber: 12,
+        text: "¿Qué desafíos hay en torno a la nutrición de los cultivos?",
+        image: null,
+        options: [
+          "Altos costos de fertilizantes, riesgo de contaminación de aguas, emisiones de gases, pérdida de nutrientes y necesidad de mejorar la eficiencia de uso.",
+          "No hay desafíos, siempre es simple y barato.",
+          "Solo el color de los sacos de fertilizante."
+        ],
+        correctIndex: 0,
+        explanation: "Se requieren estrategias para producir más con menos nutrientes perdidos al ambiente, manteniendo la fertilidad del suelo."
+      },
+      {
+        id: 45,
+        section: "Nutrición y riego",
+        originalNumber: 13,
+        text: "¿Cuál es la importancia del turgor en las plantas?",
+        image: null,
+        options: [
+          "Mantiene rígidas las células y tejidos, permite el crecimiento por expansión celular y regula la apertura estomática.",
+          "Solo sirve para cambiar el color de las flores.",
+          "No tiene importancia fisiológica."
+        ],
+        correctIndex: 0,
+        explanation: "El turgor es clave para sostén, crecimiento y regulación del intercambio gaseoso."
+      },
+      {
+        id: 46,
+        section: "Nutrición y riego",
+        originalNumber: 14,
+        text: "¿Cómo afecta el agua al crecimiento y desarrollo de las plantas?",
+        image: null,
+        options: [
+          "Es componente de células, medio de transporte de nutrientes, participa en fotosíntesis y regula temperatura; su déficit o exceso afecta fuertemente el desarrollo.",
+          "Solo sirve para lavar las hojas y no influye en el crecimiento.",
+          "No tiene ninguna función importante."
+        ],
+        correctIndex: 0,
+        explanation: "El agua es fundamental para procesos fisiológicos y para la estructura de la planta."
+      },
+      {
+        id: 47,
+        section: "Nutrición y riego",
+        originalNumber: 15,
+        text: "Explica con un ejemplo cómo puede afectar en un cultivo el déficit o el exceso de agua.",
+        image: null,
+        options: [
+          "Déficit puede reducir tamaño y rendimiento (frutos pequeños), exceso puede causar asfixia radicular, amarillamiento y enfermedades.",
+          "Déficit y exceso siempre mejoran el rendimiento.",
+          "El agua nunca afecta el rendimiento mientras haya fertilizantes."
+        ],
+        correctIndex: 0,
+        explanation: "Tanto la falta como el exceso de agua generan estrés y reducen el rendimiento."
+      },
+      {
+        id: 48,
+        section: "Nutrición y riego",
+        originalNumber: 16,
+        text: "¿Cómo influye la calidad de un melón en relación con el déficit de agua?",
+        image: null,
+        options: [
+          "Un déficit controlado en ciertas etapas puede aumentar la concentración de azúcares y la calidad, pero un déficit severo reduce calibre y rendimiento.",
+          "El déficit hídrico siempre mejora calibre y rendimiento sin límites.",
+          "No hay relación entre agua y calidad del melón."
+        ],
+        correctIndex: 0,
+        explanation: "En algunos cultivos frutales, un estrés hídrico moderado puede concentrar sólidos solubles, pero si es excesivo perjudica fuertemente la producción."
+      },
+      {
+        id: 49,
+        section: "Nutrición y riego",
+        originalNumber: 17,
+        text: "Nombra los diferentes sistemas de riego y ordénalos de mayor a menor eficiencia en el uso del agua.",
+        image: null,
+        options: [
+          "Riego por goteo &gt; microaspersión/aspersión &gt; surco &gt; tendido o inundación.",
+          "Tendido &gt; surco &gt; goteo &gt; aspersión.",
+          "Todos los sistemas tienen la misma eficiencia."
+        ],
+        correctIndex: 0,
+        explanation: "Los sistemas presurizados localizados (goteo) son los más eficientes en uso de agua."
+      },
+      {
+        id: 50,
+        section: "Nutrición y riego",
+        originalNumber: 18,
+        text: "Explica qué pasa con el agua en el suelo en saturación, capacidad de campo y punto de marchitez permanente.",
+        image: null,
+        options: [
+          "Saturación: poros llenos de agua, casi sin aire; capacidad de campo: agua útil retenida con buen aire; punto de marchitez permanente: el agua queda tan retenida que la planta no puede extraerla.",
+          "Saturación: suelo totalmente seco; capacidad de campo: suelo sin agua; punto de marchitez: suelo con exceso de agua.",
+          "Son tres nombres para la misma condición del suelo."
+        ],
+        correctIndex: 0,
+        explanation: "Estas fases describen cuánto agua hay disponible y cuánta aireación tiene el suelo para las raíces."
+      },
+      {
+        id: 51,
+        section: "Nutrición y riego",
+        originalNumber: 19,
+        text: "En relación con la capacidad de retención de agua del suelo, compara un suelo arcilloso con uno arenoso.",
+        image: null,
+        options: [
+          "Arcilloso: mayor capacidad de retención pero drenaje más lento; arenoso: retiene menos agua, requiere riegos más frecuentes y ligeros.",
+          "Arcilloso: no retiene nada de agua; arenoso: retiene todo el agua.",
+          "No hay diferencias entre ambos tipos de suelo."
+        ],
+        correctIndex: 0,
+        explanation: "Los suelos arenosos se secan rápido; los arcillosos retienen más agua pero pueden encharcarse si se riegan en exceso."
+      },
+      {
+        id: 52,
+        section: "Nutrición y riego",
+        originalNumber: 20,
+        text: "¿Qué es un tensiómetro y para qué sirve?",
+        image: null,
+        options: [
+          "Es un instrumento que mide la tensión o succión del agua en el suelo, ayudando a decidir cuándo regar.",
+          "Es un equipo que mide la temperatura del aire.",
+          "Es una bomba que inyecta fertilizante al riego."
+        ],
+        correctIndex: 0,
+        explanation: "Mide el potencial hídrico del suelo y se usa para programar riegos según el esfuerzo que hacen las raíces para extraer agua."
+      },
+      {
+        id: 53,
+        section: "Nutrición y riego",
+        originalNumber: 21,
+        text: "¿Qué es la evapotranspiración?",
+        image: null,
+        options: [
+          "Es la pérdida de agua del sistema suelo-planta por evaporación del suelo y transpiración de las plantas.",
+          "Solo la evaporación del agua desde los ríos.",
+          "Solo la transpiración de los animales."
+        ],
+        correctIndex: 0,
+        explanation: "La evapotranspiración representa el consumo de agua del cultivo y el suelo."
+      },
+      {
+        id: 54,
+        section: "Nutrición y riego",
+        originalNumber: 22,
+        text: "¿Cómo se calcula la evapotranspiración de un cultivo (ETc)?",
+        image: null,
+        options: [
+          "Como ETc = ETo × Kc, donde ETo es la evapotranspiración de referencia y Kc el coeficiente del cultivo que depende de la especie y su estado de desarrollo.",
+          "Como ETc = lluvia anual × 100, sin más información.",
+          "Como ETc = fertilizante aplicado dividido por la superficie."
+        ],
+        correctIndex: 0,
+        explanation: "ETo se calcula con datos climáticos y Kc representa cómo se comporta el cultivo respecto al de referencia."
+      },
+
+      // ---- AGRICULTURA ORGÁNICA (55–62) ----
+      {
+        id: 55,
+        section: "Agricultura orgánica",
+        originalNumber: 1,
+        text: "Explica cómo se desarrolló la agricultura orgánica desde 1960 en adelante.",
+        image: null,
+        options: [
+          "Como respuesta a los efectos de la Revolución Verde y al aumento de la preocupación por salud, ambiente y calidad, incorporando principios de cuidado del suelo, biodiversidad y ciclos cerrados.",
+          "Surge porque se acabaron los fertilizantes minerales y no había otra opción.",
+          "Es una moda sin relación con cambios culturales ni ambientales."
+        ],
+        correctIndex: 0,
+        explanation: "La producción orgánica se consolida cuando se cuestionan los impactos sociales y ambientales de la agricultura intensiva."
+      },
+      {
+        id: 56,
+        section: "Agricultura orgánica",
+        originalNumber: 2,
+        text: "¿Qué se entiende por producto orgánico según la ley chilena?",
+        image: null,
+        options: [
+          "Un producto obtenido conforme a normas de producción orgánica certificadas por un organismo autorizado.",
+          "Cualquier producto que el productor quiera llamar “natural”.",
+          "Solo productos que no contienen agua."
+        ],
+        correctIndex: 0,
+        explanation: "La ley exige que el producto provenga de un sistema orgánico certificado para poder etiquetarse como tal."
+      },
+      {
+        id: 57,
+        section: "Agricultura orgánica",
+        originalNumber: 3,
+        text: "¿Qué se entiende por agricultura orgánica, ecológica o biológica según la ley?",
+        image: null,
+        options: [
+          "Un sistema de producción que protege el suelo, los ecosistemas y las personas, evita insumos de síntesis química y cumple normas específicas de manejo.",
+          "Cualquier producción que use muchos plaguicidas sintéticos.",
+          "Solo sistemas que no usan ninguna máquina agrícola."
+        ],
+        correctIndex: 0,
+        explanation: "Las leyes equiparan estos términos para referirse a producciones reguladas y certificadas con normas comunes."
+      },
+      {
+        id: 58,
+        section: "Agricultura orgánica",
+        originalNumber: 4,
+        text: "¿Qué acciones caracterizan a los sistemas productivos orgánicos?",
+        image: null,
+        options: [
+          "Rotaciones, abonos orgánicos, control biológico, manejo preventivo, fomento de biodiversidad y fuerte restricción o prohibición de insumos sintéticos.",
+          "Uso intensivo de fertilizantes y plaguicidas sintéticos sin límite.",
+          "Prohibición absoluta de cualquier control de plagas."
+        ],
+        correctIndex: 0,
+        explanation: "La agricultura orgánica busca prevenir problemas y mantener la fertilidad y sanidad con prácticas ecológicas."
+      },
+      {
+        id: 59,
+        section: "Agricultura orgánica",
+        originalNumber: 5,
+        text: "¿Cómo es el panorama en Chile sobre agricultura orgánica respecto al número de hectáreas?",
+        image: null,
+        options: [
+          "Es un porcentaje relativamente bajo de la superficie agrícola total, pero en crecimiento, con importancia en rubros como frutales, vinos y exportación.",
+          "Prácticamente toda la superficie agrícola de Chile es orgánica.",
+          "No existe agricultura orgánica en Chile."
+        ],
+        correctIndex: 0,
+        explanation: "La superficie orgánica ha ido aumentando, pero sigue siendo menor que la producción convencional."
+      },
+      {
+        id: 60,
+        section: "Agricultura orgánica",
+        originalNumber: 6,
+        text: "¿Qué es la agricultura biodinámica y cuáles son sus principales características?",
+        image: null,
+        options: [
+          "Un tipo de agricultura que integra principios ecológicos y una visión holística del predio como organismo, usando preparados biodinámicos y calendarios astronómicos.",
+          "Un sistema que solo usa fertilizantes sintéticos de alta solubilidad.",
+          "Un sistema dedicado exclusivamente a la hidroponía industrial."
+        ],
+        correctIndex: 0,
+        explanation: "La biodinámica se basa en la filosofía de Steiner, enfatiza la integralidad del sistema y el uso de preparados específicos."
+      },
+      {
+        id: 61,
+        section: "Agricultura orgánica",
+        originalNumber: 7,
+        text: "¿A qué se refiere la agricultura regenerativa y cuáles son sus características principales?",
+        image: null,
+        options: [
+          "A un enfoque que busca restaurar suelos y ecosistemas usando mínima labranza, coberturas vegetales, diversidad de cultivos e integración de ganado.",
+          "A una agricultura que regenera únicamente la maquinaria.",
+          "A cualquier agricultura que use más labranza que la convencional."
+        ],
+        correctIndex: 0,
+        explanation: "La agricultura regenerativa pretende mejorar la salud del suelo y la biodiversidad, más allá de solo “no degradar”."
+      },
+      {
+        id: 62,
+        section: "Agricultura orgánica",
+        originalNumber: 8,
+        text: "Explica el concepto de permacultura.",
+        image: null,
+        options: [
+          "Es un enfoque de diseño de sistemas humanos (incluida la producción de alimentos) inspirados en los patrones de la naturaleza, con ética de cuidado de la tierra, de las personas y de la equidad.",
+          "Es una técnica de aplicar fertilizante químico permanente al suelo.",
+          "Es un sistema de monocultivo extensivo sin biodiversidad."
+        ],
+        correctIndex: 0,
+        explanation: "La permacultura propone diseñar asentamientos y sistemas productivos resilientes y autosuficientes."
+      },
+
+      // ---- SISTEMAS INTENSIVOS (63–69) ----
+      {
+        id: 63,
+        section: "Sistemas intensivos",
+        originalNumber: 1,
+        text: "¿Qué es la producción vegetal intensiva?",
+        image: null,
+        options: [
+          "Sistemas donde se controla fuertemente el ambiente (invernaderos, hidroponía, etc.) para lograr altos rendimientos y calidad por unidad de superficie.",
+          "Producción de baja densidad sin ningún manejo del ambiente.",
+          "Solo producción de secano extensiva sin riego ni fertilización."
+        ],
+        correctIndex: 0,
+        explanation: "La intensificación se basa en inversión en infraestructura y manejo detallado para aumentar productividad y calidad."
+      },
+      {
+        id: 64,
+        section: "Sistemas intensivos",
+        originalNumber: 2,
+        text: "¿Qué factores se controlan dentro de un invernadero? (dos principales)",
+        image: null,
+        options: [
+          "Principalmente temperatura y humedad (además de luz, ventilación y, a veces, CO₂).",
+          "Solo el color de las paredes del invernadero.",
+          "Únicamente el ruido exterior."
+        ],
+        correctIndex: 0,
+        explanation: "El control del clima interno (temperatura, humedad y radiación) es clave en la producción bajo invernadero."
+      },
+      {
+        id: 65,
+        section: "Sistemas intensivos",
+        originalNumber: 3,
+        text: "¿De dónde puede venir la fuente de energía para un invernadero?",
+        image: null,
+        options: [
+          "Del sol, combustibles fósiles, energía eléctrica, biomasa o fuentes renovables como geotermia o solar térmica.",
+          "Solo de baterías de celulares.",
+          "No necesita ninguna fuente de energía para funcionar."
+        ],
+        correctIndex: 0,
+        explanation: "Se puede combinar energía solar pasiva con sistemas de calefacción o enfriamiento activos."
+      },
+      {
+        id: 66,
+        section: "Sistemas intensivos",
+        originalNumber: 4,
+        text: "¿Qué caracteriza a un sistema de producción intensiva respecto a rendimiento, calidad, tiempo a cosecha, uso de insumos y costo?",
+        image: null,
+        options: [
+          "Alto rendimiento y calidad, menor tiempo a cosecha, uso más eficiente del agua y sustrato por kg producido, pero con mayores costos de inversión y operación.",
+          "Bajo rendimiento, mala calidad y ningún control del uso de insumos.",
+          "Cero inversión en infraestructura y sin impacto en los costos."
+        ],
+        correctIndex: 0,
+        explanation: "La intensificación aumenta productividad y calidad, pero requiere mayor inversión y manejo técnico."
+      },
+      {
+        id: 67,
+        section: "Sistemas intensivos",
+        originalNumber: 5,
+        text: "Nombra o explica algunos sistemas de producción intensiva.",
+        image: null,
+        options: [
+          "Invernaderos de suelo y sin suelo, hidroponía, sistemas NFT, cultivos en sustrato, agricultura vertical.",
+          "Solo cultivos extensivos de secano sin riego.",
+          "Únicamente pastizales naturales sin manejo."
+        ],
+        correctIndex: 0,
+        explanation: "Los sistemas intensivos suelen incluir estructuras, manejo de clima y fertirriego tecnificado."
+      },
+      {
+        id: 68,
+        section: "Sistemas intensivos",
+        originalNumber: 6,
+        text: "¿Cuáles son los componentes de un sistema de producción vegetal intensiva?",
+        image: null,
+        options: [
+          "Estructura/cubierta, sistema de clima, sistema de riego-fertirriego, sustrato o suelo, variedades adaptadas y manejo técnico.",
+          "Solo semillas, sin más componentes.",
+          "Solo una bodega, sin plantas ni sistemas de riego."
+        ],
+        correctIndex: 0,
+        explanation: "La producción intensiva se sustenta en varios subsistemas que deben funcionar coordinadamente."
+      },
+      {
+        id: 69,
+        section: "Sistemas intensivos",
+        originalNumber: 7,
+        text: "¿De qué se trata un proyecto de agricultura en el desierto como el visto en clases?",
+        image: null,
+        options: [
+          "Producción de cultivos en zonas áridas usando invernaderos, agua de mar desalinizada o tecnologías que combinan energía solar y manejo eficiente del agua.",
+          "Uso de lluvia abundante y bosques naturales sin infraestructura.",
+          "Solo ganadería extensiva sin cultivos."
+        ],
+        correctIndex: 0,
+        explanation: "Estos proyectos muestran cómo la tecnología permite producir alimentos en ambientes extremos usando recursos locales como sol y agua salina."
+      },
+
+      // ---- COSECHA Y POSTCOSECHA (70–86) ----
+      {
+        id: 70,
+        section: "Cosecha y postcosecha",
+        originalNumber: 1,
+        text: "Explica qué tipos de cosecha existen. Da ejemplos de cada una.",
+        image: null,
+        options: [
+          "Manual (hortalizas frescas), semi-mecanizada (uso de máquinas para parte del proceso) y mecanizada (ej. cosechadora de granos).",
+          "Solo manual y nada más.",
+          "Solo mecanizada sin intervención humana."
+        ],
+        correctIndex: 0,
+        explanation: "El grado de mecanización depende del cultivo, la escala y la disponibilidad de tecnología."
+      },
+      {
+        id: 71,
+        section: "Cosecha y postcosecha",
+        originalNumber: 2,
+        text: "¿Cómo se realiza la cosecha manual de granos y qué opciones existen para que no sea absolutamente manual?",
+        image: null,
+        options: [
+          "Se corta y junta el material a mano y se trilla manualmente o con trilladoras simples; se puede reducir la carga manual usando trilladoras mecánicas o pequeñas cosechadoras.",
+          "Siempre se hace lanzando agua sobre el cultivo.",
+          "Solo se realiza con helicópteros sin ningún trabajo en el campo."
+        ],
+        correctIndex: 0,
+        explanation: "La mecanización parcial (trilladoras, pequeñas máquinas) disminuye el esfuerzo de la cosecha manual tradicional."
+      },
+      {
+        id: 72,
+        section: "Cosecha y postcosecha",
+        originalNumber: 3,
+        text: "¿Qué es el venteo?",
+        image: null,
+        options: [
+          "Un proceso de limpieza donde el aire separa el grano de impurezas livianas como paja y polvo.",
+          "El proceso de agregar más agua a los granos.",
+          "Una técnica para sembrar las semillas con viento."
+        ],
+        correctIndex: 0,
+        explanation: "El venteo ayuda a mejorar la calidad del grano removiendo materiales indeseados ligeros."
+      },
+      {
+        id: 73,
+        section: "Cosecha y postcosecha",
+        originalNumber: 4,
+        text: "¿Cómo se realiza la cosecha mecanizada de grano?",
+        image: null,
+        options: [
+          "Con cosechadoras combinadas que cortan, trillan, separan y limpian el grano en una sola pasada.",
+          "Solo con tijeras manuales sin máquinas.",
+          "Soltando animales para que coman las espigas."
+        ],
+        correctIndex: 0,
+        explanation: "La cosechadora combina varias operaciones en un solo equipo, reduciendo tiempos y mano de obra."
+      },
+      {
+        id: 74,
+        section: "Cosecha y postcosecha",
+        originalNumber: 5,
+        text: "¿Qué factores importantes determinan el momento de cosecha de los granos?",
+        image: null,
+        options: [
+          "Contenido de humedad del grano, estado de madurez fisiológica, clima y riesgo de pérdida o brotación.",
+          "Solo el día de la semana en que el agricultor tiene tiempo libre.",
+          "Exclusivamente la altura de la planta."
+        ],
+        correctIndex: 0,
+        explanation: "La humedad debe estar en un rango que evite daños en cosecha y problemas de almacenamiento."
+      },
+      {
+        id: 75,
+        section: "Cosecha y postcosecha",
+        originalNumber: 6,
+        text: "¿Qué es el índice de cosecha?",
+        image: null,
+        options: [
+          "La relación entre el rendimiento económico (ej. grano) y la biomasa total aérea producida.",
+          "El número de máquinas usadas en la cosecha.",
+          "El precio que alcanza el producto en el mercado."
+        ],
+        correctIndex: 0,
+        explanation: "Un mayor índice de cosecha indica que más biomasa se destina a la parte aprovechable."
+      },
+      {
+        id: 76,
+        section: "Cosecha y postcosecha",
+        originalNumber: 7,
+        text: "¿Qué índice de cosecha determina el momento óptimo de cosecha de una hortaliza como el tomate?",
+        image: null,
+        options: [
+          "El grado de madurez del fruto (color, firmeza) que equilibra calidad de consumo y resistencia a manipulación y transporte.",
+          "El tamaño de la raíz principal de la planta.",
+          "La longitud de las hojas inferiores del tomate."
+        ],
+        correctIndex: 0,
+        explanation: "El momento óptimo considera madurez fisiológica y requerimientos del mercado (color, firmeza, sabor)."
+      },
+      {
+        id: 77,
+        section: "Cosecha y postcosecha",
+        originalNumber: 8,
+        text: "¿Qué desafíos hay en torno a la cosecha de los cultivos?",
+        image: null,
+        options: [
+          "Disponibilidad de mano de obra, sincronía de madurez, condiciones climáticas, acceso a maquinaria y minimizar pérdidas por daño mecánico.",
+          "No existen desafíos, siempre es una tarea fácil.",
+          "Solo elegir el color del envase del producto."
+        ],
+        correctIndex: 0,
+        explanation: "La cosecha es un momento crítico donde malas decisiones pueden generar pérdidas importantes."
+      },
+      {
+        id: 78,
+        section: "Cosecha y postcosecha",
+        originalNumber: 9,
+        text: "¿Dónde se producen las pérdidas de alimento durante la producción de un cultivo?",
+        image: null,
+        options: [
+          "En cosecha, manejo, transporte, almacenamiento, procesamiento y distribución, con magnitud distinta según el país y el nivel de desarrollo.",
+          "Solo en el punto de venta al consumidor.",
+          "Solo en la siembra, nunca después."
+        ],
+        correctIndex: 0,
+        explanation: "La cadena completa desde el campo hasta la mesa puede tener pérdidas si no se maneja adecuadamente."
+      },
+      {
+        id: 79,
+        section: "Cosecha y postcosecha",
+        originalNumber: 10,
+        text: "Según diferentes realidades socioeconómicas, ¿cómo se pierde la mayor cantidad de alimento?",
+        image: null,
+        options: [
+          "En países de menores ingresos predominan pérdidas en producción y postcosecha temprana; en países de mayores ingresos, predominan pérdidas y desperdicio en distribución y consumidor.",
+          "En todos los países se pierde exactamente lo mismo y en las mismas etapas.",
+          "Solo se pierde alimento en los restaurantes de lujo."
+        ],
+        correctIndex: 0,
+        explanation: "El patrón de pérdidas cambia: falta de infraestructura vs hábitos de consumo y desperdicio."
+      },
+      {
+        id: 80,
+        section: "Cosecha y postcosecha",
+        originalNumber: 11,
+        text: "¿Cómo se puede lograr un manejo integrado en la postcosecha de un cultivo?",
+        image: null,
+        options: [
+          "Aplicando buenas prácticas de cosecha, enfriamiento rápido, almacenamiento adecuado, envases apropiados y control de ambiente (temperatura y humedad).",
+          "Solo dejando los productos al sol el mayor tiempo posible.",
+          "Guardando todo en cualquier lugar sin control alguno."
+        ],
+        correctIndex: 0,
+        explanation: "La postcosecha integrada combina tecnología y manejo para mantener la calidad y reducir pérdidas."
+      },
+      {
+        id: 81,
+        section: "Cosecha y postcosecha",
+        originalNumber: 12,
+        text: "¿Qué factores en la precosecha y cosecha pueden afectar la postcosecha?",
+        image: null,
+        options: [
+          "Variedad, manejo nutricional e hídrico, sanidad, estado de madurez, hora de cosecha y forma de manipulación.",
+          "Solo la marca del tractor utilizado.",
+          "Ningún factor previo afecta la postcosecha."
+        ],
+        correctIndex: 0,
+        explanation: "La calidad de postcosecha se define en gran medida por el manejo antes y durante la cosecha."
+      },
+      {
+        id: 82,
+        section: "Cosecha y postcosecha",
+        originalNumber: 13,
+        text: "Respecto a la pregunta anterior, ¿qué acciones se pueden realizar para tener productos con mejor postcosecha?",
+        image: null,
+        options: [
+          "Elegir variedades adecuadas, manejar riego y nutrición, cosechar en la madurez correcta, evitar golpes y enfriar rápidamente.",
+          "Cosechar lo más verde posible y dejarlo al sol para que se caliente.",
+          "No controlar ni riego ni nutrición y cosechar en cualquier momento."
+        ],
+        correctIndex: 0,
+        explanation: "El manejo integrado desde precosecha reduce daños y aumenta la vida útil del producto."
+      },
+      {
+        id: 83,
+        section: "Cosecha y postcosecha",
+        originalNumber: 14,
+        text: "Explica la importancia de la tasa de respiración de los cultivos en la postcosecha de hortalizas.",
+        image: null,
+        options: [
+          "Una mayor tasa de respiración acelera el envejecimiento y las pérdidas; reducirla con baja temperatura y atmósfera adecuada prolonga la vida útil.",
+          "No tiene ningún efecto sobre la vida útil.",
+          "Solo importa para cultivos de secano, no para hortalizas."
+        ],
+        correctIndex: 0,
+        explanation: "La respiración consume reservas y genera calor; controlarla es central en el manejo postcosecha."
+      },
+      {
+        id: 84,
+        section: "Cosecha y postcosecha",
+        originalNumber: 15,
+        text: "¿Cómo se puede manejar la tasa de respiración en los granos cosechados?",
+        image: null,
+        options: [
+          "Secándolos hasta una humedad segura, manteniéndolos frescos y ventilados para evitar calentamiento y desarrollo de hongos.",
+          "Aumentando su humedad para que respiren más.",
+          "Guardándolos en ambientes totalmente cerrados y húmedos."
+        ],
+        correctIndex: 0,
+        explanation: "La combinación de baja humedad y temperatura reduce la respiración y el riesgo de deterioro."
+      },
+      {
+        id: 85,
+        section: "Cosecha y postcosecha",
+        originalNumber: 16,
+        text: "¿Cómo evitar que aumente la humedad interna del grano durante el almacenamiento?",
+        image: null,
+        options: [
+          "Almacenando granos ya secos, usando silos bien ventilados, evitando condensación y controlando temperatura.",
+          "Rociando agua sobre los silos cada día.",
+          "Guardando granos con humedad muy alta en bodegas cerradas sin ventilación."
+        ],
+        correctIndex: 0,
+        explanation: "La humedad interna debe mantenerse baja para evitar hongos, brotación y pérdidas."
+      },
+      {
+        id: 86,
+        section: "Cosecha y postcosecha",
+        originalNumber: 17,
+        text: "¿Qué opciones hay para secar granos?",
+        image: null,
+        options: [
+          "Secado natural al sol en patios o lonas, secadores solares y secadores mecánicos de aire caliente.",
+          "Solo dejarlos dentro de sacos mojados.",
+          "No es necesario secar granos antes de almacenar."
+        ],
+        correctIndex: 0,
+        explanation: "El método elegido depende del clima, recursos y escala de producción."
+      }
+    ];
+
+    // ===============================
+    // 2) LÓGICA DEL QUIZ (NO TOCAR MUCHO)
+    // ===============================
+    let currentIndex = 0;
+    let score = 0;
+    let answeredCount = 0;
+    let hasAnsweredCurrent = false;
+
+    const totalQuestions = questions.length;
+
+    const startScreen = document.getElementById("start-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const endScreen = document.getElementById("end-screen");
+
+    const questionCountLabel = document.getElementById("question-count-label");
+    const btnStart = document.getElementById("btn-start");
+    const btnHow = document.getElementById("btn-how");
+    const howTo = document.getElementById("how-to");
+
+    const questionSectionEl = document.getElementById("question-section");
+    const quizProgressEl = document.getElementById("quiz-progress");
+    const quizScoreEl = document.getElementById("quiz-score");
+    const questionOriginalEl = document.getElementById("question-original");
+    const questionTextEl = document.getElementById("question-text");
+    const questionImageEl = document.getElementById("question-image");
+    const optionsContainer = document.getElementById("options-container");
+
+    const openPanel = document.getElementById("open-question-panel");
+    const btnShowSolution = document.getElementById("btn-show-solution");
+    const openSolutionBox = document.getElementById("open-solution-box");
+
+    const feedbackEl = document.getElementById("feedback");
+    const feedbackTitleEl = document.getElementById("feedback-title");
+    const feedbackBodyEl = document.getElementById("feedback-body");
+
+    const pillInfoEl = document.getElementById("pill-info");
+    const btnPrev = document.getElementById("btn-prev");
+    const btnNext = document.getElementById("btn-next");
+
+    const finalScoreEl = document.getElementById("final-score");
+    const finalTotalEl = document.getElementById("final-total");
+    const summaryCorrectEl = document.getElementById("summary-correct");
+    const summaryAnsweredEl = document.getElementById("summary-answered");
+    const summaryPercentEl = document.getElementById("summary-percent");
+    const btnRestart = document.getElementById("btn-restart");
+    const btnBackHome = document.getElementById("btn-back-home");
+
+    questionCountLabel.textContent = `${totalQuestions} pregunta${totalQuestions !== 1 ? "s" : ""} cargadas`;
+
+    btnStart.addEventListener("click", () => {
+      startScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      quizScreen.classList.remove("hidden");
+      currentIndex = 0;
+      score = 0;
+      answeredCount = 0;
+      hasAnsweredCurrent = false;
+      renderQuestion();
+    });
+
+    btnHow.addEventListener("click", () => {
+      howTo.classList.toggle("hidden");
+    });
+
+    btnPrev.addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        hasAnsweredCurrent = false;
+        renderQuestion();
+      }
+    });
+
+    btnNext.addEventListener("click", () => {
+      if (currentIndex === totalQuestions - 1) {
+        showSummary();
+      } else {
+        currentIndex++;
+        hasAnsweredCurrent = false;
+        renderQuestion();
+      }
+    });
+
+    btnShowSolution.addEventListener("click", () => {
+      const q = questions[currentIndex];
+      const explanation = q.explanation && q.explanation.trim().length > 0
+        ? q.explanation
+        : "Aquí puedes escribir la solución de esta pregunta en el array questions.";
+      openSolutionBox.textContent = explanation;
+      openSolutionBox.classList.remove("hidden");
+      if (!hasAnsweredCurrent) {
+        answeredCount++;
+        hasAnsweredCurrent = true;
+      }
+    });
+
+    btnRestart.addEventListener("click", () => {
+      endScreen.classList.add("hidden");
+      startScreen.classList.remove("hidden");
+    });
+
+    btnBackHome.addEventListener("click", () => {
+      endScreen.classList.add("hidden");
+      startScreen.classList.remove("hidden");
+    });
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+
+      const sectionLabel = q.section || "Sin sección";
+      questionSectionEl.textContent = sectionLabel;
+      quizProgressEl.textContent = `Pregunta ${currentIndex + 1} de ${totalQuestions}`;
+      quizScoreEl.textContent = `Puntaje: ${score}`;
+
+      questionOriginalEl.textContent = q.originalNumber
+        ? `Pregunta ${q.originalNumber} dentro de "${sectionLabel}"`
+        : "";
+
+      questionTextEl.textContent = q.text;
+
+      if (q.image) {
+        questionImageEl.src = q.image;
+        questionImageEl.classList.remove("hidden");
+      } else {
+        questionImageEl.classList.add("hidden");
+      }
+
+      feedbackEl.classList.add("hidden");
+      feedbackEl.classList.remove("correct", "incorrect");
+      feedbackTitleEl.textContent = "";
+      feedbackBodyEl.textContent = "";
+
+      openSolutionBox.classList.add("hidden");
+      openSolutionBox.textContent = "";
+
+      optionsContainer.innerHTML = "";
+      const hasOptions = Array.isArray(q.options) && q.options.length > 0;
+
+      if (hasOptions) {
+        openPanel.classList.add("hidden");
+        q.options.forEach((optText, idx) => {
+          const btn = document.createElement("button");
+          btn.className = "btn option-btn";
+          btn.dataset.index = idx;
+          btn.innerHTML = `<span class="option-label">${String.fromCharCode(65 + idx)}.</span><span class="option-text">${optText}</span>`;
+          btn.addEventListener("click", () => handleOptionClick(btn, idx));
+          optionsContainer.appendChild(btn);
+        });
+        pillInfoEl.textContent = "Pregunta de alternativa múltiple";
+      } else {
+        openPanel.classList.remove("hidden");
+        pillInfoEl.textContent = "Pregunta abierta (sin alternativas definidas)";
+      }
+
+      btnPrev.disabled = currentIndex === 0;
+      btnNext.textContent = currentIndex === totalQuestions - 1 ? "Ver resumen" : "Siguiente";
+    }
+
+    function handleOptionClick(button, selectedIdx) {
+      const q = questions[currentIndex];
+      if (hasAnsweredCurrent && button.classList.contains("disabled")) return;
+
+      const correctIdx = q.correctIndex ?? 0;
+
+      const allButtons = optionsContainer.querySelectorAll(".option-btn");
+      allButtons.forEach(btn => {
+        btn.classList.add("disabled");
+      });
+
+      allButtons.forEach((btn, idx) => {
+        if (idx === correctIdx) {
+          btn.classList.add("correct");
+        }
+      });
+
+      const correct = selectedIdx === correctIdx;
+
+      if (correct) {
+        feedbackEl.classList.remove("hidden");
+        feedbackEl.classList.add("correct");
+        feedbackEl.classList.remove("incorrect");
+        feedbackTitleEl.textContent = "✅ ¡Correcto!";
+        feedbackBodyEl.textContent = q.explanation || "";
+        if (!hasAnsweredCurrent) {
+          score++;
+          answeredCount++;
+          hasAnsweredCurrent = true;
+        }
+      } else {
+        feedbackEl.classList.remove("hidden");
+        feedbackEl.classList.add("incorrect");
+        feedbackEl.classList.remove("correct");
+        feedbackTitleEl.textContent = "❌ Incorrecto";
+        feedbackBodyEl.textContent = q.explanation || "Revisa tus apuntes para esta pregunta.";
+        if (!hasAnsweredCurrent) {
+          answeredCount++;
+          hasAnsweredCurrent = true;
+        }
+      }
+
+      quizScoreEl.textContent = `Puntaje: ${score}`;
+    }
+
+    function showSummary() {
+      quizScreen.classList.add("hidden");
+      endScreen.classList.remove("hidden");
+
+      finalScoreEl.textContent = score;
+      finalTotalEl.textContent = totalQuestions;
+      summaryCorrectEl.textContent = `${score} correcta(s)`;
+      summaryAnsweredEl.textContent = `${answeredCount} respondida(s)`;
+      const percent = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+      summaryPercentEl.textContent = `${percent}%`;
+    }
+  </script>
+</body>
+</html>
